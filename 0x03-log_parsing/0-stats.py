@@ -6,35 +6,47 @@ script that reads stdin line by line and computes metrics
 
 import sys
 
-if __name__ == '__main__':
+'''
+Dictionary to store counts for different HTTP status codes
+'''
+STATUS_CODES = {'200': 0,
+                '301': 0, '400': 0,
+                '401': 0, '403': 0,
+                '404': 0, '405': 0,
+                '500': 0}
 
-    filesize, count = 0, 0
-    codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
-    stats = {k: 0 for k in codes}
+total_size = 0
+number_of_lines = 0
 
-    def print_stats(stats: dict, file_size: int) -> None:
-        print("File size: {:d}".format(filesize))
-        for k, v in sorted(stats.items()):
-            if v:
-                print("{}: {}".format(k, v))
 
-    try:
-        for line in sys.stdin:
-            count += 1
-            data = line.split()
-            try:
-                status_code = data[-2]
-                if status_code in stats:
-                    stats[status_code] += 1
-            except BaseException:
-                pass
-            try:
-                filesize += int(data[-1])
-            except BaseException:
-                pass
-            if count % 10 == 0:
-                print_stats(stats, filesize)
-        print_stats(stats, filesize)
-    except KeyboardInterrupt:
-        print_stats(stats, filesize)
-        raise
+def print_status_code(total_size):
+    """
+    to print status codes and total file size
+    """
+    print("File size: {:d}".format(total_size))
+    for key, value in sorted(STATUS_CODES.items()):
+        if value != 0:
+            print("{}: {:d}".format(key, value))
+
+
+try:
+    for argument in sys.stdin:
+        arguments = argument.split(" ")
+        if len(arguments) > 2:
+            status_code = arguments[-2]
+            file_size = arguments[-1]
+
+            if status_code in STATUS_CODES:
+                STATUS_CODES[status_code] += 1
+
+            total_size += int(file_size)
+            number_of_lines += 1
+
+            if number_of_lines == 10:
+                print_status_code(total_size)
+                number_of_lines = 0
+
+except KeyboardInterrupt:
+    pass
+finally:
+    print_status_code(total_size)
