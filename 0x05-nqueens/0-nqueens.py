@@ -5,6 +5,7 @@ N Queens placement on NxN chessboard
 
 import sys
 
+
 def is_safe(board, row, col, n):
     # Check if there is a queen in the same row on the left
     for i in range(col):
@@ -23,6 +24,7 @@ def is_safe(board, row, col, n):
 
     return True
 
+
 def solve_nqueens_util(board, col, n, solutions):
     if col == n:
         solutions.append([[row, col] for row in range(n)])
@@ -33,6 +35,7 @@ def solve_nqueens_util(board, col, n, solutions):
             board[i][col] = 1
             solve_nqueens_util(board, col + 1, n, solutions)
             board[i][col] = 0
+
 
 def solve_nqueens(n):
     if not n.isdigit():
@@ -53,10 +56,10 @@ def solve_nqueens(n):
     for solution in solutions:
         print(solution)
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
 
     solve_nqueens(sys.argv[1])
-
