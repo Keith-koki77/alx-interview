@@ -1,33 +1,20 @@
 #!/usr/bin/node
 
-const axios = require('axios');
+const util = require('util');
+const request = util.promisify(require('request'));
+const id = process.argv[2];
 
-function getMovieCharacters(movieId) {
-  const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+async function starwars (id) {
+  const endpoint = 'https://swapi-api.hbtn.io/api/films/' + id;
+  let response = await (await request(endpoint)).body;
+  response = JSON.parse(response);
+  const characters = response.characters;
 
-  axios.get(apiUrl)
-    .then(response => {
-      const charactersUrls = response.data.characters;
-
-      charactersUrls.forEach(characterUrl => {
-        axios.get(characterUrl)
-          .then(characterResponse => {
-            console.log(characterResponse.data.name);
-          })
-          .catch(error => {
-            console.error(`Failed to retrieve character data. Error: ${error.message}`);
-          });
-      });
-    })
-    .catch(error => {
-      console.error(`Failed to retrieve movie data. Error: ${error.message}`);
-    });
+  for (let x = 0; x < characters.length; x++) {
+    const url = characters[x];
+    let character = await (await request(url)).body;
+    character = JSON.parse(character);
+    console.log(character.name);
+  }
 }
-
-if (process.argv.length !== 3) {
-  console.error('Usage: node starwars_characters.js <movie_id>');
-  process.exit(1);
-}
-
-const movieId = process.argv[2];
-getMovieCharacters(movieId);
+starwars(id);
