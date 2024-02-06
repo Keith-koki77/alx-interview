@@ -7,24 +7,7 @@ island described in grid
 
 def island_perimeter(grid):
     perimeter = 0
-
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            if grid[i][j] == 1:
-                # Check top edge
-                if i == 0 or grid[i-1][j] == 0:
-                    perimeter += 1
-
-                # Check bottom edge
-                if i == len(grid)-1 or grid[i+1][j] == 0:
-                    perimeter += 1
-
-                # Check left edge
-                if j == 0 or grid[i][j-1] == 0:
-                    perimeter += 1
-
-                # Check right edge
-                if j == len(grid[i])-1 or grid[i][j+1] == 0:
-                    perimeter += 1
-
+    for row in grid + list(map(list, zip(*grid))):
+        for i, j in zip([0] + row, row + [0]):
+            perimeter += int(i != j)
     return perimeter
