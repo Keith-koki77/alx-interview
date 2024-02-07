@@ -6,6 +6,9 @@ island described in grid
 
 
 def island_perimeter(grid):
+    """
+    Returns perimeter of island described in grid
+    """
     num = 0
     row = len(grid)
     col = len(grid[0]) if row else 0
