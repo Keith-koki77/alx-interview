@@ -6,33 +6,20 @@ island described in grid
 
 
 def island_perimeter(grid):
+    def dfs(x, y):
+        if x < 0 or y < 0 or x >= len(grid) or y >= len(grid[0]):
+            return 0
+        if grid[x][y] == 0:
+            return 1
+        if visited[x][y]:
+            return 0
+        visited[x][y] = True
+        return dfs(x - 1, y) + dfs(x + 1, y) + dfs(x, y - 1) + dfs(x, y + 1)
+
+    visited = [[False for _ in range(len(grid[0]))] for _ in range(len(grid))]
     perimeter = 0
-    rows, cols = len(grid), len(grid[0])
-
-    for x in range(rows):
-        for y in range(cols):
-            if grid[x][y] == 1:
-                if x == 0 or grid[x - 1][y] == 0:
-                    perimeter += 1
-
-                if x == rows - 1 or grid[x + 1][y] == 0:
-                    perimeter += 1
-
-                if y == 0 or grid[x][y - 1] == 0:
-                    perimeter += 1
-
-                if y == cols - 1 or grid[x][y + 1] == 0:
-                    perimeter += 1
-
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == 1:
+                perimeter += dfs(i, j)
     return perimeter
-
-
-if __name__ == "__main__":
-    grid = [
-        [0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0]
-    ]
-    print(island_perimeter(grid))
