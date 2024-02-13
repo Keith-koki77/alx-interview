@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """
+A python script for determining a winner
 """
 
 
